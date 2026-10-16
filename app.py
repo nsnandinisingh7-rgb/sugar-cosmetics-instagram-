@@ -43,12 +43,11 @@ def style(fig, h=340, legend=True):
 
 @st.cache_data
 def load():
-    d = Path(__file__).parent / "data"
-    p = d / "sugar_cosmetics_clean.csv.gz"
-    if not p.exists():
-        p = d / "sugar_cosmetics_clean.csv"
-    if not p.exists():
-        st.error("Data file not found in data/ - run `python 01_preprocessing.py` first.")
+    base = Path(__file__).parent
+    p = next((q for q in [base / "data" / "sugar_cosmetics_clean.csv.gz", base / "sugar_cosmetics_clean.csv.gz",
+                          base / "data" / "sugar_cosmetics_clean.csv", base / "sugar_cosmetics_clean.csv"] if q.exists()), None)
+    if p is None:
+        st.error("Data file not found. Upload sugar_cosmetics_clean.csv.gz to your GitHub repo (inside a folder named data).")
         st.stop()
     return pd.read_csv(p, parse_dates=["post_date"])
 
